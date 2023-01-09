@@ -12,7 +12,7 @@ Please refer to Helm's [documentation](https://helm.sh/docs/) to get started.
 - Pre-existing Kubernetes Cluster
 - Helm 3.0+
 
-## Install the Chart
+## Install the Charts
 
 Add OpenTelemetry Helm repository:
 
@@ -24,6 +24,18 @@ To install the chart with the release name my-otel-demo, run the following comma
 
 ```shell
 helm install my-otel-demo open-telemetry/opentelemetry-demo
+```
+
+Add Datadog Helm repository:
+
+```shell 
+helm repo add datadog https://helm.datadoghq.com
+```
+
+To install the chart with the release name datadog, run the following command:
+
+```shell
+helm install datadog -f datadog-values.yaml --set datadog.site='datadoghq.com'
 ```
 
 > **Note**
