@@ -2,8 +2,8 @@
 
 targetSystem: "linux"
 datadog:
-  apiKey: 
-  appKey: 
+  apiKey: ${DD_API_KEY}
+  appKey: ${DD_APP_KEY}
   # If not using secrets, then use apiKey and appKey instead
  # apiKeyExistingSecret: <DATADOG_API_KEY_SECRET>
  ##appKeyExistingSecret: <DATADOG_APP_KEY_SECRET>

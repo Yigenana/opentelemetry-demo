@@ -35,7 +35,7 @@ helm repo add datadog https://helm.datadoghq.com
 To install the chart with the release name datadog, run the following command:
 
 ```shell
-helm install datadog -f datadog-values.yaml --set datadog.site='datadoghq.com'
+helm install datadog -f datadog-values.yaml datadog/datadog --set datadog.site='datadoghq.com'
 ```
 
 > **Note**
