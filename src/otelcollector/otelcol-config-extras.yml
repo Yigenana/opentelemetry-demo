@@ -30,6 +30,15 @@ receivers:
         scrape_interval: 10s
         static_configs:
         - targets: ['0.0.0.0:8888']
+  filelog:
+    include: [ /var/log/*.log ]
+    operators:
+      - type: json_parser
+        timestamp:
+          parse_from: attributes.time
+          layout: '%Y-%m-%d %H:%M:%S'
+        severity:
+          parse_from: body.severity_field
 
 processors:
   batch:
@@ -43,8 +52,13 @@ processors:
       - key: deployment.environment   # Set env tag for Datadog
         value: "otel"
         action: upsert
+      - key: service.version   # Set version tag for Datadog
+        value: "1.8"
+        action: upsert
 
 exporters:
+  logging:
+    logLevel: debug
   datadog:
     api:
       key: ${DD_API_KEY}
@@ -53,6 +67,10 @@ exporters:
         - otel:true
 
 service:
+  telemetry:
+    logs:
+      level: debug
+
   pipelines:
     metrics:
       receivers: [hostmetrics]
@@ -61,5 +79,10 @@ service:
     traces:
       processors: [batch, resource]
       exporters: [datadog]
+    logs:
+      receivers: [filelog]
+      processors: [batch]
+      exporters: [logging, datadog]
+
 
 
