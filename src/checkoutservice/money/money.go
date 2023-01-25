@@ -15,9 +15,13 @@
 package money
 
 import (
+	"context"
 	"errors"
 
 	pb "github.com/open-telemetry/opentelemetry-demo/src/checkoutservice/genproto/hipstershop"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 )
 
 const (
@@ -122,11 +126,23 @@ func Sum(l, r *pb.Money) (*pb.Money, error) {
 
 // MultiplySlow is a slow multiplication operation done through adding the value
 // to itself n-1 times.
-func MultiplySlow(m *pb.Money, n uint32) *pb.Money {
+func MultiplySlow(ctx context.Context, m *pb.Money, n uint32) *pb.Money {
+	// Add a custom span.
+	provider := otel.GetTracerProvider()
+	tr := provider.Tracer("checkoutservice/money")
+	var span trace.Span
+	_, span = tr.Start(ctx, "MultiplySlow")
+	defer span.End()
+
 	out := m
 	for n > 1 {
 		out = Must(Sum(out, m))
 		n--
 	}
+
+	span.SetAttributes(
+		attribute.Int64("checkout.amount", out.Units),
+		attribute.String("checkout.currency", out.CurrencyCode),
+	)
 	return out
 }
