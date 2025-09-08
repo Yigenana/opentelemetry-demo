@@ -75,17 +75,39 @@ processors:
         },
         # BEGIN: policies for team_a
         {
-          # Rule 2: no sampling for readiness/liveness probes
+          # Rule 2: low sampling for readiness/liveness probes
           name: team_a-probe,
-          type: drop,
-          drop:
+          type: and,
+          and:
             {
-              drop_sub_policy:
+              and_sub_policy:
                 [
                   {
-                    name: drop-policy-1,
+                    # filter by service name
+                    name: service-name-policy,
                     type: string_attribute,
-                    string_attribute: {key: http.route, values: [\/status], enabled_regex_matching: true}
+                    string_attribute:
+                      {
+                        key: service.name,
+                        values: [ad, email, recommendation, image-provider],
+                      },
+                  },
+                  {
+                    # filter by route
+                    name: route-live-ready-policy,
+                    type: string_attribute,
+                    string_attribute:
+                      {
+                        key: http.route,
+                        values: [/status],
+                        enabled_regex_matching: true,
+                      },
+                  },
+                  {
+                    # apply probabilistic sampling
+                    name: probabilistic-policy,
+                    type: probabilistic,
+                    probabilistic: { sampling_percentage: 0.1 },
                   },
                 ],
             },

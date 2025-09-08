@@ -151,3 +151,46 @@ For more information about the emeritus role, see the [community repository](htt
 [Tracetest]: https://github.com/kubeshop/opentelemetry-demo
 [Uptrace]: https://github.com/uptrace/uptrace/tree/master/example/opentelemetry-demo
 [VictoriaMetrics]: https://github.com/VictoriaMetrics-Community/opentelemetry-demo
+
+<!-- Datadog Sampling Workshop Guidance -->
+
+## Sampling Workshop Guide
+
+### Head-Based Sampling
+
+Services can set sampling rates with the follow environment variables:
+
+```
+OTEL_TRACES_SAMPLER="traceidratio"
+OTEL_TRACES_SAMPLER_ARG="0.1"
+```
+
+Uncomment these EnvVars for the Ads service.
+This will set the sample rate for the service to 0.
+Once the changes are made and the app restarted,
+verify there are no spans for the ads service.
+
+Head based sampling causes metrics to no longer be calculated.
+Revert the change and let's move on to Tail sampling.
+
+### Tail-Based Sampling
+
+There are two types of tail-based sampling:
+Tail Sampling Processor
+Probabilistic Sampling Processor
+
+Let's enable the Tail Sampling Processor first.
+
+Rename `otel-config-extras` to `otel-config-start`.
+Then rename `otel-config-extras-tail-sample` to `otel-config-extras`
+Review the policies. Redeploy.
+
+Confirm accounts is still sending all spans.
+Confirm service:image-provider resource: GET /status is no longer sending spans.
+Confirm all ad service errors are still received.
+Add a maual drop and manual keep, confirm spans are dropped and kept.
+
+Now let's enable the Probabilistic Sampler.
+
+Rename `otel-config-extras` to `otel-config-extras-tail-sample`
+Then rename `otel-config-extras-probablistic` to `otel-config-extras`

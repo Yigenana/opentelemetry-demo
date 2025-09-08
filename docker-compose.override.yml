@@ -6,4 +6,4 @@ services:
       - "--feature-gates=datadog.EnableOperationAndResourceNameV2"
     environment:
       - DD_SITE_PARAMETER=datadoghq.com	
-      - DD_API_KEY=$DD_API_KEY
+      - DD_API_KEY=${DD_API_KEY}

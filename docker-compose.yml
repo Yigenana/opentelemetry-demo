@@ -73,6 +73,8 @@ services:
       - OTEL_RESOURCE_ATTRIBUTES
       - OTEL_LOGS_EXPORTER=otlp
       - OTEL_SERVICE_NAME=ad
+      #- OTEL_TRACES_SAMPLER="traceidratio"
+      #- OTEL_TRACES_SAMPLER_ARG="0"
       # Workaround on OSX for https://bugs.openjdk.org/browse/JDK-8345296
       - _JAVA_OPTIONS
     depends_on:
