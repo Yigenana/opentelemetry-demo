@@ -194,3 +194,6 @@ Now let's enable the Probabilistic Sampler.
 
 Rename `otel-config-extras` to `otel-config-extras-tail-sample`
 Then rename `otel-config-extras-probablistic` to `otel-config-extras`
+
+The sampler is set to 15%
+Notice how the total span count in the span explorer is lower.
