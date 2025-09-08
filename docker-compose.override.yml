@@ -1,0 +1,9 @@
+services:
+  otel-collector:
+    command:
+      - "--config=/etc/otelcol-config.yml"
+      - "--config=/etc/otelcol-config-extras.yml"
+      - "--feature-gates=datadog.EnableOperationAndResourceNameV2"
+    environment:
+      - DD_SITE_PARAMETER=datadoghq.com	
+      - DD_API_KEY=$DD_API_KEY
