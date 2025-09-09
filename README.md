@@ -156,6 +156,8 @@ For more information about the emeritus role, see the [community repository](htt
 
 ## Sampling Workshop Guide
 
+Update the .env file and add your API key to the DD_API_Key variable.
+
 ### Head-Based Sampling
 
 Services can set sampling rates with the follow environment variables:
@@ -167,10 +169,13 @@ OTEL_TRACES_SAMPLER_ARG="0.1"
 
 Uncomment these EnvVars for the Ads service.
 This will set the sample rate for the service to 0.
-Once the changes are made and the app restarted,
-verify there are no spans for the ads service.
+Restart the collector:
+`docker compose restart otel-collector`
+Verify there are no spans for the ads service.
 
-Head based sampling causes metrics to no longer be calculated.
+Try adding sampling to another service and inspect the results.
+
+Head based sampling causes DD Trace metrics to no longer be accurate.
 Revert the change and let's move on to Tail sampling.
 
 ### Tail-Based Sampling
@@ -181,9 +186,9 @@ Probabilistic Sampling Processor
 
 Let's enable the Tail Sampling Processor first.
 
-Rename `otel-config-extras` to `otel-config-start`.
-Then rename `otel-config-extras-tail-sample` to `otel-config-extras`
-Review the policies. Redeploy.
+In the .env file, comment out OTEL_SAMPLING_CONFIG=otelcol-config-extras.yml
+Uncomment OTEL_SAMPLING_CONFIG=otelcol-config-extras-tail.yml
+Review the policies. in the config file. Restart the collector.
 
 Confirm accounts is still sending all spans.
 Confirm service:image-provider resource: GET /status is no longer sending spans.
@@ -192,8 +197,10 @@ Add a maual drop and manual keep, confirm spans are dropped and kept.
 
 Now let's enable the Probabilistic Sampler.
 
-Rename `otel-config-extras` to `otel-config-extras-tail-sample`
-Then rename `otel-config-extras-probablistic` to `otel-config-extras`
+Update the .env file
+Comment out OTEL_SAMPLING_CONFIG=otelcol-config-extras-tail.yml
+Uncomment OTEL_SAMPLING_CONFIG=otelcol-config-extras-prob.yml
+Restart the collector.
 
 The sampler is set to 15%
 Notice how the total span count in the span explorer is lower.

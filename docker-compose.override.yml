@@ -2,7 +2,7 @@ services:
   otel-collector:
     command:
       - "--config=/etc/otelcol-config.yml"
-      - "--config=/etc/otelcol-config-extras.yml"
+      - "--config=/etc/${OTEL_SAMPLING_CONFIG}"
       - "--feature-gates=datadog.EnableOperationAndResourceNameV2"
     environment:
       - DD_SITE_PARAMETER=datadoghq.com	
